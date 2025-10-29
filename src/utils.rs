@@ -23,7 +23,7 @@ pub fn regex_isolate_one<'a>(
     let new_section = section
         .get(section_locs.0..section_locs.1)
         .expect("invalid substring");
-    if new_section.len() > 0 {
+    if !new_section.is_empty() {
         Some(new_section)
     } else {
         None

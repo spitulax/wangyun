@@ -1,5 +1,3 @@
-use regex::Regex;
-
 use crate::{regexes::regexes, utils::regex_isolate_one};
 
 #[derive(Debug, Default)]
@@ -29,7 +27,7 @@ pub enum Tones {
 pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
     let re_start = &regexes().mc_section_start;
     let re_end = &regexes().mc_section_end;
-    let mc_section = if let Some(s) = regex_isolate_one(section, &re_start, &re_end) {
+    let mc_section = if let Some(s) = regex_isolate_one(section, re_start, re_end) {
         s
     } else {
         return vec![];
@@ -38,8 +36,10 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
     let mut datas = Vec::<Data<'_>>::new();
     let readings = fetch_readings(mc_section);
     for reading in readings {
-        let mut data = Data::default();
-        data.reading = reading;
+        let data = Data {
+            reading,
+            ..Data::default()
+        };
         datas.push(data);
     }
 
@@ -51,12 +51,12 @@ pub fn fetch_readings(section: &str) -> Vec<&str> {
     let re_row_end = &regexes().mc_reading_end;
     let re_reading = &regexes().mc_reading;
     let mut readings = Vec::<&str>::new();
-    if let Some(row) = regex_isolate_one(section, &re_row_start, &re_row_end) {
+    if let Some(row) = regex_isolate_one(section, re_row_start, re_row_end) {
         for (_, [reading]) in re_reading.captures_iter(row).map(|c| c.extract()) {
             readings.push(reading);
         }
 
-        if readings.len() <= 0 {
+        if readings.is_empty() {
             unreachable!("Misformatted HTML: Reading row should be filled.")
         }
     } else {

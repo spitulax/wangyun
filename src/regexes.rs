@@ -34,5 +34,5 @@ impl Regexes {
 
 pub static REGEXES: OnceLock<Regexes> = OnceLock::new();
 pub fn regexes() -> &'static Regexes {
-    REGEXES.get_or_init(|| Regexes::new())
+    REGEXES.get_or_init(Regexes::new)
 }
