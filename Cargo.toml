@@ -1,0 +1,17 @@
+[package]
+name = "wangyun"
+version = "0.0.0"
+authors = [ "spitulax" ]
+edition = "2021"
+description = "Chinese character lookup tool with data from Wiktionary."
+readme = "README.md"
+homepage = "https://github.com/spitulax/wangyun"
+repository = "https://github.com/spitulax/wangyun"
+license = "MIT"
+keywords = [ ]
+categories = [ ] # https://crates.io/category_slugs
+
+[dependencies]
+clap = { version = "4.5.50", features = ["derive"] }
+regex = "1.12.2"
+reqwest = { version = "0.12.24", features = ["blocking"] }
