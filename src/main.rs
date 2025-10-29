@@ -1,7 +1,10 @@
 use clap::{Parser, ValueEnum};
 use regex::Regex;
 
+use crate::regexes::regexes;
+
 mod middle;
+mod regexes;
 mod utils;
 
 const _USER_AGENT: &str = concat!(
@@ -71,7 +74,7 @@ fn request() -> String {
 }
 
 fn isolate_chinese_section(page: &str) -> &str {
-    let re = Regex::new(r#"<h2 id=".*">(.*)</h2>"#).expect("invalid regex");
+    let re = &regexes().isolate_chinese_section;
     let mut locs = re.capture_locations();
     let mut chinese_section_locs = (0, 0);
     let mut offset = 0;
@@ -102,7 +105,7 @@ fn isolate_chinese_section(page: &str) -> &str {
 }
 
 fn pronunciation_sections(section: &str) -> Vec<&str> {
-    let re = Regex::new(r#"<h3 id=".*">(.*)</h3>"#).expect("invalid regex");
+    let re = &regexes().pronunciation_sections;
     let mut locs = re.capture_locations();
     let mut pron_sections = Vec::<&str>::new();
     let mut offset = 0;

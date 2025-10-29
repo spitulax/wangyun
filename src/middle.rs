@@ -1,6 +1,6 @@
 use regex::Regex;
 
-use crate::utils::regex_isolate_one;
+use crate::{regexes::regexes, utils::regex_isolate_one};
 
 #[derive(Debug, Default)]
 pub struct Data<'a> {
@@ -27,11 +27,8 @@ pub enum Tones {
 }
 
 pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
-    // FIXME: Compiling regex in loop
-    let re_start = Regex::new(r#"title="w:Middle Chinese" class="extiw">Middle Chinese"#)
-        .expect("invalid regex");
-    let re_end = Regex::new(r#"<div class="vsSwitcher" data-toggle-category="pronunciations">"#)
-        .expect("invalid regex");
+    let re_start = &regexes().mc_section_start;
+    let re_end = &regexes().mc_section_end;
     let mc_section = if let Some(s) = regex_isolate_one(section, &re_start, &re_end) {
         s
     } else {
@@ -50,11 +47,9 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
 }
 
 pub fn fetch_readings(section: &str) -> Vec<&str> {
-    // FIXME: Compiling regex in loop
-    let re_row_start =
-        Regex::new(r#"<th.*><small>Reading #</small></th>\n"#).expect("invalid regex");
-    let re_row_end = Regex::new(r#"</tr>"#).expect("invalid regex");
-    let re_reading = Regex::new(r#"<td.*>(.*)</td>"#).expect("invalid regex");
+    let re_row_start = &regexes().mc_reading_start;
+    let re_row_end = &regexes().mc_reading_end;
+    let re_reading = &regexes().mc_reading;
     let mut readings = Vec::<&str>::new();
     if let Some(row) = regex_isolate_one(section, &re_row_start, &re_row_end) {
         for (_, [reading]) in re_reading.captures_iter(row).map(|c| c.extract()) {
