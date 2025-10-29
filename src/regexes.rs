@@ -7,9 +7,16 @@ pub struct Regexes {
 
     pub mc_section_start: Regex,
     pub mc_section_end: Regex,
+    pub mc_row_end: Regex,
+    pub mc_simple_row: Regex,
     pub mc_reading_start: Regex,
-    pub mc_reading_end: Regex,
-    pub mc_reading: Regex,
+    pub mc_init_start: Regex,
+    pub mc_fin_start: Regex,
+    pub mc_init_fin: Regex,
+    pub mc_tone_start: Regex,
+    pub mc_tone: Regex,
+    pub mc_open_start: Regex,
+    pub mc_div_start: Regex,
 }
 
 impl Regexes {
@@ -21,9 +28,16 @@ impl Regexes {
             mc_section_end: Self::re(
                 r#"<div class="vsSwitcher" data-toggle-category="pronunciations">"#,
             ),
+            mc_row_end: Self::re(r#"</tr>"#),
+            mc_simple_row: Self::re(r#"<td.*>(.*)</td>"#),
             mc_reading_start: Self::re(r#"<th.*><small>Reading #</small></th>\n"#),
-            mc_reading_end: Self::re(r#"</tr>"#),
-            mc_reading: Self::re(r#"<td.*>(.*)</td>"#),
+            mc_init_start: Self::re(r#"<th.*><small>Initial</small>"#),
+            mc_fin_start: Self::re(r#"<th.*><small>Final</small>"#),
+            mc_init_fin: Self::re(r#"title="Appendix:Middle Chinese">(.*)</a></span>"#),
+            mc_tone_start: Self::re(r#"<th.*><small>Tone</small>"#),
+            mc_tone: Self::re(r#"<td.*>(.*) .*</td>"#),
+            mc_open_start: Self::re(r#"<th.*><small>Openness</small>"#),
+            mc_div_start: Self::re(r#"<th.*><small>Division</small>"#),
         }
     }
 

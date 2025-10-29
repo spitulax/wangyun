@@ -1,7 +1,6 @@
 use clap::{Parser, ValueEnum};
-use regex::Regex;
 
-use crate::regexes::regexes;
+use regexes::regexes;
 
 mod middle;
 mod regexes;
