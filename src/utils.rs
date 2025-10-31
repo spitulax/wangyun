@@ -1,3 +1,4 @@
+use crate::regexes;
 use regex::Regex;
 
 pub fn regex_isolate_one<'a>(
@@ -28,4 +29,22 @@ pub fn regex_isolate_one<'a>(
     } else {
         None
     }
+}
+
+pub fn fetch_row<'a>(section: &'a str, re_row_start: &Regex, re_row_elem: &Regex) -> Vec<&'a str> {
+    let re_row_end = &regexes().row_end;
+    let mut elems = Vec::<&str>::new();
+    if let Some(row) = regex_isolate_one(section, re_row_start, re_row_end) {
+        for (_, [reading]) in re_row_elem.captures_iter(row).map(|c| c.extract()) {
+            elems.push(reading);
+        }
+
+        if elems.is_empty() {
+            unreachable!("Misformatted HTML: Row should be filled.");
+        }
+    } else {
+        unreachable!("Misformatted HTML: Section should have the specified row");
+    }
+
+    elems
 }

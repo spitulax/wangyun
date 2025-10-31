@@ -3,6 +3,7 @@ use clap::{Parser, ValueEnum};
 use regexes::regexes;
 
 mod middle;
+mod old_bs;
 mod regexes;
 mod utils;
 
@@ -60,7 +61,15 @@ fn main() -> Result<()> {
         for pronunciation in pronunciations {
             if args.middle {
                 let data = middle::fetch(pronunciation);
+                println!("Middle Chinese: {data:#?}");
             }
+
+            if args.old {
+                let data_bs = old_bs::fetch(pronunciation);
+                println!("Old Chinese (B-S): {data_bs:#?}");
+            }
+
+            println!("\n");
         }
     }
 

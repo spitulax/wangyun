@@ -1,6 +1,7 @@
-use regex::Regex;
-
-use crate::{regexes::regexes, utils::regex_isolate_one};
+use crate::{
+    regexes::regexes,
+    utils::{fetch_row, regex_isolate_one},
+};
 
 #[derive(Debug, Default)]
 pub struct Data<'a> {
@@ -48,6 +49,7 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
     };
 
     let mut datas = Vec::<Data<'_>>::new();
+
     let readings = fetch_row(
         mc_section,
         &regexes().mc_reading_start,
@@ -103,7 +105,7 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
         }
     }
 
-    let fanqies = fetch_fanqie(section);
+    let fanqies = fetch_fanqie(mc_section);
     for (data, fanqie) in datas.iter_mut().zip(fanqies.into_iter()) {
         data.fanqie = fanqie;
     }
@@ -137,27 +139,9 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
     datas
 }
 
-pub fn fetch_row<'a>(section: &'a str, re_row_start: &Regex, re_row_elem: &Regex) -> Vec<&'a str> {
-    let re_row_end = &regexes().mc_row_end;
-    let mut elems = Vec::<&str>::new();
-    if let Some(row) = regex_isolate_one(section, re_row_start, re_row_end) {
-        for (_, [reading]) in re_row_elem.captures_iter(row).map(|c| c.extract()) {
-            elems.push(reading);
-        }
-
-        if elems.is_empty() {
-            unreachable!("Misformatted HTML: Row should be filled.");
-        }
-    } else {
-        unreachable!("Misformatted HTML: Middle Chinese section should have the specified row");
-    }
-
-    elems
-}
-
 pub fn fetch_fanqie(section: &str) -> Vec<String> {
     let re_row_start = &regexes().mc_fanqie_start;
-    let re_row_end = &regexes().mc_row_end;
+    let re_row_end = &regexes().row_end;
     let re_row_elem = &regexes().mc_fanqie;
     let mut elems = Vec::<String>::new();
     if let Some(row) = regex_isolate_one(section, re_row_start, re_row_end) {

@@ -2,12 +2,12 @@ use regex::Regex;
 use std::sync::OnceLock;
 
 pub struct Regexes {
+    pub row_end: Regex,
     pub isolate_chinese_section: Regex,
     pub pronunciation_sections: Regex,
 
     pub mc_section_start: Regex,
     pub mc_section_end: Regex,
-    pub mc_row_end: Regex,
     pub mc_simple_row: Regex,
     pub mc_reading_start: Regex,
     pub mc_init_start: Regex,
@@ -25,18 +25,23 @@ pub struct Regexes {
     pub mc_cantonese_start: Regex,
     pub mc_mandarin: Regex,
     pub mc_cantonese: Regex,
+
+    pub old_old_chinese_start: Regex,
+    pub old_old_chinese: Regex,
+    pub old_bs_section_start: Regex,
+    pub old_bs_section_end: Regex,
 }
 
 impl Regexes {
     pub fn new() -> Self {
         Self {
+            row_end: Self::re(r#"</tr>"#),
             isolate_chinese_section: Self::re(r#"<h2 id=".*">(.*)</h2>"#),
             pronunciation_sections: Self::re(r#"<h3 id=".*">(.*)</h3>"#),
             mc_section_start: Self::re(r#"title="w:Middle Chinese" class="extiw">Middle Chinese"#),
             mc_section_end: Self::re(
                 r#"<div class="vsSwitcher" data-toggle-category="pronunciations">"#,
             ),
-            mc_row_end: Self::re(r#"</tr>"#),
             mc_simple_row: Self::re(r#"<td.*>(.*)</td>"#),
             mc_reading_start: Self::re(r#"<th.*><small>Reading #</small></th>\n"#),
             mc_init_start: Self::re(r#"<th.*><small>Initial</small>"#),
@@ -56,6 +61,12 @@ impl Regexes {
             mc_cantonese_start: Self::re(r#"<small>Expected<br/>Cantonese<br/>Reflex</small>"#),
             mc_mandarin: Self::re(r#"<td.*>(.*)</td>"#),
             mc_cantonese: Self::re(r#"<td.*>(.*<sup>.</sup>)</td>"#),
+            old_old_chinese_start: Self::re(r#"<small>Old<br/>Chinese</small>"#),
+            old_old_chinese: Self::re(r#"<span class="IPAchar">/(.*)/.*</span>"#),
+            old_bs_section_start: Self::re(r#"title="w:Old Chinese" class="extiw">Old Chinese"#),
+            old_bs_section_end: Self::re(
+                r#"</tbody></table>\n<table class="wikitable mw-collapsible mw-collapsed".*>"#,
+            ),
         }
     }
 
