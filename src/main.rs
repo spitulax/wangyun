@@ -4,6 +4,7 @@ use regexes::regexes;
 
 mod middle;
 mod old_bs;
+mod old_zh;
 mod regexes;
 mod utils;
 
@@ -67,6 +68,9 @@ fn main() -> Result<()> {
             if args.old {
                 let data_bs = old_bs::fetch(pronunciation);
                 println!("Old Chinese (B-S): {data_bs:#?}");
+
+                let data_zh = old_zh::fetch(pronunciation);
+                println!("Old Chinese (Zhengzhang): {data_zh:#?}");
             }
 
             println!("\n");

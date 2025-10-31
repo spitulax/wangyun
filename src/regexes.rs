@@ -30,6 +30,8 @@ pub struct Regexes {
     pub old_old_chinese: Regex,
     pub old_bs_section_start: Regex,
     pub old_bs_section_end: Regex,
+    pub old_zh_section_start: Regex,
+    pub old_zh_section_end: Regex,
 }
 
 impl Regexes {
@@ -63,10 +65,16 @@ impl Regexes {
             mc_cantonese: Self::re(r#"<td.*>(.*<sup>.</sup>)</td>"#),
             old_old_chinese_start: Self::re(r#"<small>Old<br/>Chinese</small>"#),
             old_old_chinese: Self::re(r#"<span class="IPAchar">/(.*)/.*</span>"#),
-            old_bs_section_start: Self::re(r#"title="w:Old Chinese" class="extiw">Old Chinese"#),
+            old_bs_section_start: Self::re(
+                r#"title="w:William H. Baxter" class="extiw">Baxter</a>"#,
+            ),
             old_bs_section_end: Self::re(
                 r#"</tbody></table>\n<table class="wikitable mw-collapsible mw-collapsed".*>"#,
             ),
+            old_zh_section_start: Self::re(
+                r#"title="w:Zhengzhang Shangfang" class="extiw">Zhengzhang</a> system \(2003\)"#,
+            ),
+            old_zh_section_end: Self::re(r#"</tbody></table></div></div></div></div><link"#),
         }
     }
 
