@@ -60,7 +60,6 @@ fn main() -> Result<()> {
         for pronunciation in pronunciations {
             if args.middle {
                 let data = middle::fetch(pronunciation);
-                println!("{data:#?}");
             }
         }
     }

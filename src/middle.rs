@@ -10,10 +10,10 @@ pub struct Data<'a> {
     tone: Tones,
     open: bool,
     division: usize,
-    fanqie: &'a str,
+    fanqie: String,
     baxter: &'a str,
-    mandarin: &'a str,
-    cantonese: String,
+    expected_mandarin: &'a str,
+    expected_cantonese: String,
 }
 
 #[derive(Debug, Copy, Clone, Default)]
@@ -103,6 +103,37 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
         }
     }
 
+    let fanqies = fetch_fanqie(section);
+    for (data, fanqie) in datas.iter_mut().zip(fanqies.into_iter()) {
+        data.fanqie = fanqie;
+    }
+
+    let baxters = fetch_row(mc_section, &regexes().mc_baxter_start, &regexes().mc_baxter);
+    for (data, baxter) in datas.iter_mut().zip(baxters.iter()) {
+        data.baxter = baxter;
+    }
+
+    let expected_mandarins = fetch_row(
+        mc_section,
+        &regexes().mc_mandarin_start,
+        &regexes().mc_mandarin,
+    );
+    for (data, expected_mandarin) in datas.iter_mut().zip(expected_mandarins.iter()) {
+        data.expected_mandarin = expected_mandarin;
+    }
+
+    let expected_cantoneses = fetch_row(
+        mc_section,
+        &regexes().mc_cantonese_start,
+        &regexes().mc_cantonese,
+    );
+    for (data, expected_cantonese) in datas.iter_mut().zip(expected_cantoneses.iter()) {
+        let expected = expected_cantonese
+            .replace("<sup>", "")
+            .replace("</sup>", "");
+        data.expected_cantonese = expected;
+    }
+
     datas
 }
 
@@ -115,7 +146,31 @@ pub fn fetch_row<'a>(section: &'a str, re_row_start: &Regex, re_row_elem: &Regex
         }
 
         if elems.is_empty() {
-            unreachable!("Misformatted HTML: Row should be filled.")
+            unreachable!("Misformatted HTML: Row should be filled.");
+        }
+    } else {
+        unreachable!("Misformatted HTML: Middle Chinese section should have the specified row");
+    }
+
+    elems
+}
+
+pub fn fetch_fanqie(section: &str) -> Vec<String> {
+    let re_row_start = &regexes().mc_fanqie_start;
+    let re_row_end = &regexes().mc_row_end;
+    let re_row_elem = &regexes().mc_fanqie;
+    let mut elems = Vec::<String>::new();
+    if let Some(row) = regex_isolate_one(section, re_row_start, re_row_end) {
+        for (_, [f1, f2]) in re_row_elem.captures_iter(row).map(|c| c.extract()) {
+            let mut elem = String::new();
+            elem.push_str(f1);
+            elem.push_str(f2);
+            elem.push('切');
+            elems.push(elem);
+        }
+
+        if elems.is_empty() {
+            unreachable!("Misformatted HTML: Row should be filled.");
         }
     } else {
         unreachable!("Misformatted HTML: Middle Chinese section should have the specified row");

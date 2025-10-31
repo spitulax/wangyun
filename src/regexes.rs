@@ -17,6 +17,14 @@ pub struct Regexes {
     pub mc_tone: Regex,
     pub mc_open_start: Regex,
     pub mc_div_start: Regex,
+    pub mc_fanqie_start: Regex,
+    pub mc_fanqie: Regex,
+    pub mc_baxter_start: Regex,
+    pub mc_baxter: Regex,
+    pub mc_mandarin_start: Regex,
+    pub mc_cantonese_start: Regex,
+    pub mc_mandarin: Regex,
+    pub mc_cantonese: Regex,
 }
 
 impl Regexes {
@@ -38,6 +46,16 @@ impl Regexes {
             mc_tone: Self::re(r#"<td.*>(.*) .*</td>"#),
             mc_open_start: Self::re(r#"<th.*><small>Openness</small>"#),
             mc_div_start: Self::re(r#"<th.*><small>Division</small>"#),
+            mc_fanqie_start: Self::re(r#"title="w:Fanqie" class="extiw">Fanqie"#),
+            mc_fanqie: Self::re(r#"title=".*">(.*)</a><.*title=".*">(.*)</a>"#),
+            mc_baxter_start: Self::re(
+                r#"title="w:Baxter's transcription for Middle Chinese" class="extiw">Baxter"#,
+            ),
+            mc_baxter: Self::re(r#"<span lang="zh">(.*)</span>"#),
+            mc_mandarin_start: Self::re(r#"<small>Expected<br/>Mandarin<br/>Reflex</small>"#),
+            mc_cantonese_start: Self::re(r#"<small>Expected<br/>Cantonese<br/>Reflex</small>"#),
+            mc_mandarin: Self::re(r#"<td.*>(.*)</td>"#),
+            mc_cantonese: Self::re(r#"<td.*>(.*<sup>.</sup>)</td>"#),
         }
     }
 
