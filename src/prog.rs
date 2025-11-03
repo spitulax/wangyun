@@ -1,6 +1,11 @@
 use std::collections::HashSet;
 
-use crate::{middle, modern, old_bs, old_zh, pronunciation_sections, Args, Variants};
+use crate::{
+    middle, modern, old_bs, old_zh,
+    request::request,
+    utils::{isolate_chinese_section, pronunciation_sections},
+    Args, Variants,
+};
 
 macro_rules! print_modern {
     ($args: expr, $enum: expr, $prereq: expr, $val: expr, $text: literal) => {
@@ -12,13 +17,16 @@ macro_rules! print_modern {
     };
 }
 
-pub fn display(section: &str, args: &Args) {
-    for (i, char) in args.chars.chars().enumerate() {
+pub fn display(args: &Args) -> reqwest::Result<()> {
+    for (i, c) in args.chars.chars().enumerate() {
+        let page = request(c)?;
+        let section = isolate_chinese_section(&page);
+
         if i > 0 {
             println!("");
         }
 
-        println!("\x1b[31;1mCharacter: {char}\x1b[0m");
+        println!("\x1b[31;1mCharacter: {c}\x1b[0m");
 
         let pronunciations = pronunciation_sections(section);
 
@@ -274,10 +282,15 @@ pub fn display(section: &str, args: &Args) {
             }
         }
     }
+
+    Ok(())
 }
 
-pub fn baxter(section: &str, args: &Args) {
-    for (i, _) in args.chars.chars().enumerate() {
+pub fn baxter(args: &Args) -> reqwest::Result<()> {
+    for (i, c) in args.chars.chars().enumerate() {
+        let page = request(c)?;
+        let section = isolate_chinese_section(&page);
+
         if i > 0 {
             print!(" ");
         }
@@ -298,7 +311,14 @@ pub fn baxter(section: &str, args: &Args) {
             .filter(|item| seen.insert(*item))
             .collect::<Vec<_>>();
 
-        print!("{}", list_uniq.join("|"));
+        if list_uniq.is_empty() {
+            print!("[]");
+        } else {
+            print!("{}", list_uniq.join("|"));
+        }
     }
+
     println!();
+
+    Ok(())
 }
