@@ -15,7 +15,7 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
         return vec![];
     };
 
-    let mut datas = Vec::<Data<'_>>::new();
+    let mut datas = vec![];
 
     let readings = fetch_row(
         old_section,

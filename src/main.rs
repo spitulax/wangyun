@@ -3,6 +3,7 @@ use clap::{Parser, ValueEnum};
 use regexes::regexes;
 
 mod middle;
+mod modern;
 mod old_bs;
 mod old_zh;
 mod regexes;
@@ -71,6 +72,11 @@ fn main() -> Result<()> {
 
                 let data_zh = old_zh::fetch(pronunciation);
                 println!("Old Chinese (Zhengzhang): {data_zh:#?}");
+            }
+
+            if !args.modern.is_empty() {
+                let data = modern::fetch(pronunciation);
+                println!("Modern: {data:#?}");
             }
 
             println!("\n");

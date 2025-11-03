@@ -1315,6 +1315,7 @@ dependencies = [
  "clap",
  "regex",
  "reqwest",
+ "serde_json",
 ]
 
 [[package]]

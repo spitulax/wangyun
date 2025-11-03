@@ -32,6 +32,8 @@ pub struct Regexes {
     pub old_bs_section_end: Regex,
     pub old_zh_section_start: Regex,
     pub old_zh_section_end: Regex,
+
+    pub modern_data: Regex,
 }
 
 impl Regexes {
@@ -75,6 +77,7 @@ impl Regexes {
                 r#"title="w:Zhengzhang Shangfang" class="extiw">Zhengzhang</a> system \(2003\)"#,
             ),
             old_zh_section_end: Self::re(r#"</tbody></table></div></div></div></div><link"#),
+            modern_data: Self::re(r#"<div class="standard-box zhpron" .* data-mw='(.*)'"#),
         }
     }
 
