@@ -18,12 +18,17 @@ macro_rules! print_modern {
 }
 
 pub fn display(args: &Args) -> reqwest::Result<()> {
+    let mut pages = vec![];
+    for c in args.chars.chars() {
+        pages.push(request(c)?);
+    }
+
     for (i, c) in args.chars.chars().enumerate() {
-        let page = request(c)?;
-        let section = isolate_chinese_section(&page);
+        let page = &pages[i];
+        let section = isolate_chinese_section(page);
 
         if i > 0 {
-            println!("");
+            println!();
         }
 
         println!("\x1b[31;1mCharacter: {c}\x1b[0m");
@@ -287,9 +292,14 @@ pub fn display(args: &Args) -> reqwest::Result<()> {
 }
 
 pub fn baxter(args: &Args) -> reqwest::Result<()> {
-    for (i, c) in args.chars.chars().enumerate() {
-        let page = request(c)?;
-        let section = isolate_chinese_section(&page);
+    let mut pages = vec![];
+    for c in args.chars.chars() {
+        pages.push(request(c)?);
+    }
+
+    for (i, _) in args.chars.chars().enumerate() {
+        let page = &pages[i];
+        let section = isolate_chinese_section(page);
 
         if i > 0 {
             print!(" ");

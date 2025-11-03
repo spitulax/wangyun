@@ -42,7 +42,7 @@ pub fn request(c: char) -> reqwest::Result<String> {
         .send()?
         .text();
 
-    LAST_REQUEST_TIME.get_or_init(|| SystemTime::now());
+    LAST_REQUEST_TIME.get_or_init(SystemTime::now);
 
     response
 }
