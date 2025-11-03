@@ -1,11 +1,13 @@
-use clap::{Parser, ValueEnum};
-
+use clap::Parser;
 use regexes::regexes;
+
+use crate::{modern::Variants, prog::start};
 
 mod middle;
 mod modern;
 mod old_bs;
 mod old_zh;
+mod prog;
 mod regexes;
 mod utils;
 
@@ -15,8 +17,6 @@ const _USER_AGENT: &str = concat!(
     env!("CARGO_PKG_VERSION"),
     " (https://github.com/spitulax/wangyun; bintangadiputra@proton.me)",
 );
-
-type Result<T> = std::result::Result<T, ()>;
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -34,56 +34,16 @@ struct Args {
 
     /// Show pronunciations of modern variants
     #[arg(short('M'), long)]
-    modern: Vec<ModernVariants>,
+    modern: Vec<Variants>,
 }
 
-#[derive(Debug, Copy, Clone, ValueEnum, PartialEq, Eq)]
-enum ModernVariants {
-    All,
-    Mandarin,
-    Cantonese,
-    Gan,
-    Hakka,
-    Jin,
-    Min,
-    Pinghua,
-    Wu,
-    Xiang,
-}
-
-fn main() -> Result<()> {
+fn main() {
     let args = Args::parse();
 
     let page = request();
     let section = isolate_chinese_section(&page);
 
-    for _char in args.chars.chars() {
-        let pronunciations = pronunciation_sections(section);
-
-        for pronunciation in pronunciations {
-            if args.middle {
-                let data = middle::fetch(pronunciation);
-                println!("Middle Chinese: {data:#?}");
-            }
-
-            if args.old {
-                let data_bs = old_bs::fetch(pronunciation);
-                println!("Old Chinese (B-S): {data_bs:#?}");
-
-                let data_zh = old_zh::fetch(pronunciation);
-                println!("Old Chinese (Zhengzhang): {data_zh:#?}");
-            }
-
-            if !args.modern.is_empty() {
-                let data = modern::fetch(pronunciation);
-                println!("Modern: {data:#?}");
-            }
-
-            println!("\n");
-        }
-    }
-
-    Ok(())
+    start(section, &args);
 }
 
 fn request() -> String {

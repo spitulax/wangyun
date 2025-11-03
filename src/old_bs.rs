@@ -2,8 +2,8 @@ use crate::{regexes, utils::fetch_row, utils::regex_isolate_one};
 
 #[derive(Debug, Default)]
 pub struct Data<'a> {
-    reading: &'a str,
-    old_chinese: &'a str,
+    pub reading: &'a str,
+    pub old_chinese: &'a str,
 }
 
 pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {

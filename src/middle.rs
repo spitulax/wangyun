@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::{
     regexes::regexes,
     utils::{fetch_row, regex_isolate_one},
@@ -5,16 +7,16 @@ use crate::{
 
 #[derive(Debug, Default)]
 pub struct Data<'a> {
-    reading: &'a str,
-    init: &'a str,
-    fin: &'a str,
-    tone: Tones,
-    open: bool,
-    division: usize,
-    fanqie: String,
-    baxter: &'a str,
-    expected_mandarin: &'a str,
-    expected_cantonese: String,
+    pub reading: &'a str,
+    pub init: &'a str,
+    pub fin: &'a str,
+    pub tone: Tones,
+    pub open: bool,
+    pub division: usize,
+    pub fanqie: String,
+    pub baxter: &'a str,
+    pub expected_mandarin: &'a str,
+    pub expected_cantonese: String,
 }
 
 #[derive(Debug, Copy, Clone, Default)]
@@ -25,6 +27,22 @@ pub enum Tones {
     Shang,
     Qu,
     Ru,
+}
+
+impl Display for Tones {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match *self {
+                Self::Unknown => "〇",
+                Self::Ping => "平",
+                Self::Shang => "上",
+                Self::Qu => "去",
+                Self::Ru => "入",
+            }
+        )
+    }
 }
 
 impl From<&str> for Tones {

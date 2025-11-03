@@ -1,44 +1,118 @@
 use crate::regexes::regexes;
+use clap::ValueEnum;
 use serde_json::{self, Value};
+
+#[derive(Debug, Copy, Clone, ValueEnum, PartialEq, Eq)]
+pub enum Variants {
+    All,
+    /// Mandarin (All)
+    Man,
+    /// Mandarin (Standard, Pinyin)
+    Ms,
+    /// Mandarin (Chengdu, Sichuanese Pinyin)
+    Mc,
+    /// Mandarin (Xi'an, Guanzhong Pinyin)
+    Mx,
+    /// Mandarin (Nanjing, Nanjing Pinyin)
+    Mn,
+    /// Mandarin (Dungan, Cyrillic)
+    Md,
+    /// Cantonese (All)
+    Can,
+    /// Cantonese (Guangzhou-Hong Kong, Jyutping)
+    Cg,
+    /// Cantonese (Dongguan, Jyutping++)
+    Cd,
+    /// Cantonese (Taishan, Wiktionary)
+    Ct,
+    /// Cantonese (Yangjiang, Jyutping++)
+    Cy,
+    /// Gan (Wiktionary)
+    Gan,
+    /// Hakka (All)
+    Hak,
+    /// Hakka (Sixian, Pha̍k-fa-sṳ)
+    Hs,
+    /// Hakka (Hailu, Taiwanese Hakka Romanization)
+    Hh,
+    /// Hakka (Meixian, Guangdong Romanization)
+    Hm,
+    /// Hakka (Changting, Changting Pinyin)
+    Hc,
+    /// Jin (Wiktionary)
+    Jin,
+    /// Min (All)
+    Min,
+    /// Northern Min (Gṳ̿ing-nǎing Lô̤-mǎ-cī)
+    Minn,
+    /// Eastern Min (Bàng-uâ-cê)
+    Mine,
+    /// Puxian Min (Pouseng Ping'ing)
+    Minp,
+    /// Southern Min (All)
+    Mins,
+    /// Hokkien (Pe̍h-ōe-jī)
+    Minh,
+    /// Teochew (Peng'im)
+    Mint,
+    /// Leizhou (Leizhou Pinyin)
+    Minl,
+    /// Southern Pinghua (Jyutping++)
+    Sp,
+    /// Wu (All)
+    Wu,
+    /// Wu (Northern, Wugniu)
+    Wn,
+    /// Wu (Jinhua, Wugniu)
+    Wj,
+    /// Xiang (All)
+    Xiang,
+    /// Xiang (Changsha, Wiktionary)
+    Xc,
+    /// Xiang (Loudi, Wiktionary)
+    Xl,
+    /// Xiang (Hengyang, Wiktionary)
+    Xh,
+}
 
 #[derive(Debug, Default)]
 pub struct Data {
     // Mandarin
-    ma_standard: Option<String>,
-    ma_chengdu: Option<String>,
-    ma_xian: Option<String>,
-    ma_nanjing: Option<String>,
-    ma_dungan: Option<String>,
+    pub ma_standard: Option<String>,
+    pub ma_chengdu: Option<String>,
+    pub ma_xian: Option<String>,
+    pub ma_nanjing: Option<String>,
+    pub ma_dungan: Option<String>,
     // Cantonese
-    ca_guangzhou: Option<String>,
-    ca_dongguan: Option<String>,
-    ca_taishan: Option<String>,
-    ca_yangjiang: Option<String>,
+    pub ca_guangzhou: Option<String>,
+    pub ca_dongguan: Option<String>,
+    pub ca_taishan: Option<String>,
+    pub ca_yangjiang: Option<String>,
     // Gan
-    gan: Option<String>,
+    pub gan: Option<String>,
     // Hakka
-    ha_sixian: Option<String>,
-    ha_hailu: Option<String>,
-    ha_meixian: Option<String>,
-    ha_changting: Option<String>,
+    pub ha_sixian: Option<String>,
+    pub ha_hailu: Option<String>,
+    pub ha_meixian: Option<String>,
+    pub ha_changting: Option<String>,
     // Jin
-    jin: Option<String>,
+    pub jin: Option<String>,
     // Min
-    mi_northern: Option<String>,
-    mi_eastern: Option<String>,
-    mi_puxian: Option<String>,
-    mi_hokkien: Option<String>,
-    mi_teochew: Option<String>,
-    mi_leizhou: Option<String>,
+    pub mi_northern: Option<String>,
+    pub mi_eastern: Option<String>,
+    pub mi_puxian: Option<String>,
+    pub mi_hokkien: Option<String>,
+    pub mi_teochew: Option<String>,
+    pub mi_leizhou: Option<String>,
     // Pinghua
-    ph_southern: Option<String>,
+    pub ph_southern: Option<String>,
     // Wu
-    wu_northern: Option<String>,
-    wu_jinhua: Option<String>,
+    pub wu_northern: Option<String>,
+    pub wu_jinhua: Option<String>,
     // Xiang
-    xi_changsa: Option<String>,
-    xi_loudi: Option<String>,
-    xi_hengyang: Option<String>,
+    pub xi_changsa: Option<String>,
+    pub xi_loudi: Option<String>,
+    pub xi_hengyang: Option<String>,
 }
 
 pub fn fetch(section: &str) -> Data {
