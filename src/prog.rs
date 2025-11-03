@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::{middle, modern, old_bs, old_zh, pronunciation_sections, Args, Variants};
 
 macro_rules! print_modern {
@@ -10,7 +12,7 @@ macro_rules! print_modern {
     };
 }
 
-pub fn start(section: &str, args: &Args) {
+pub fn display(section: &str, args: &Args) {
     for (i, char) in args.chars.chars().enumerate() {
         if i > 0 {
             println!("");
@@ -272,4 +274,31 @@ pub fn start(section: &str, args: &Args) {
             }
         }
     }
+}
+
+pub fn baxter(section: &str, args: &Args) {
+    for (i, _) in args.chars.chars().enumerate() {
+        if i > 0 {
+            print!(" ");
+        }
+
+        let mut list = vec![];
+
+        let pronunciations = pronunciation_sections(section);
+        for pronunciation in pronunciations {
+            let data = middle::fetch(pronunciation);
+            for r in data {
+                list.push(r.baxter);
+            }
+        }
+
+        let mut seen = HashSet::new();
+        let list_uniq = list
+            .into_iter()
+            .filter(|item| seen.insert(*item))
+            .collect::<Vec<_>>();
+
+        print!("{}", list_uniq.join("|"));
+    }
+    println!();
 }

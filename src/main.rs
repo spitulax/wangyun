@@ -1,7 +1,10 @@
 use clap::Parser;
 use regexes::regexes;
 
-use crate::{modern::Variants, prog::start};
+use crate::{
+    modern::Variants,
+    prog::{baxter, display},
+};
 
 mod middle;
 mod modern;
@@ -35,6 +38,10 @@ struct Args {
     /// Show pronunciations of modern variants
     #[arg(short('M'), long)]
     modern: Vec<Variants>,
+
+    /// Only print Baxter's Middle Chinese transcription
+    #[arg(short, long)]
+    baxter: bool,
 }
 
 fn main() {
@@ -43,7 +50,11 @@ fn main() {
     let page = request();
     let section = isolate_chinese_section(&page);
 
-    start(section, &args);
+    if args.baxter {
+        baxter(section, &args);
+    } else {
+        display(section, &args);
+    }
 }
 
 fn request() -> String {
