@@ -82,11 +82,12 @@ pub fn isolate_chinese_section(page: &str) -> &str {
 
 pub fn pronunciation_sections(section: &str) -> Vec<&str> {
     let re = &regexes().pronunciation_sections;
-    let mut locs = re.capture_locations();
     let mut pron_sections = Vec::<&str>::new();
     let mut offset = 0;
     let mut section_locs = (0, 0);
     let mut search_end = false;
+    let mut locs = re.capture_locations();
+
     while re.captures_read_at(&mut locs, section, offset).is_some() {
         if let (Some(loc), Some(name_loc)) = (locs.get(0), locs.get(1)) {
             let name = section

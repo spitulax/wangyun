@@ -125,6 +125,7 @@ pub fn fetch(section: &str) -> Data {
             let wik_data: Value =
                 serde_json::from_str(data_str.as_str()).expect("Invalid JSON data.");
             if let Some(prons) = get(&wik_data) {
+                // NOTE: Sometimes the data is wrong and we can do nothing about it.
                 data.ma_standard = get_pron(prons, "m");
                 data.ma_chengdu = get_pron(prons, "m-s");
                 data.ma_xian = get_pron(prons, "m-x");
@@ -176,7 +177,12 @@ fn get(data: &Value) -> Option<&Value> {
 }
 
 fn get_pron(data: &Value, name: &str) -> Option<String> {
-    Some(data.get(name)?.get("wt")?.as_str()?.to_string())
+    let s = data.get(name)?.get("wt")?.as_str()?;
+    if !s.is_empty() {
+        Some(s.to_string())
+    } else {
+        None
+    }
 }
 
 fn simplify_romanizations(s: &str, sep: char) -> String {

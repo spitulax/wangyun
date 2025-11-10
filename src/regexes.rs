@@ -32,6 +32,7 @@ pub struct Regexes {
     pub old_bs_section_end: Regex,
     pub old_zh_section_start: Regex,
     pub old_zh_section_end: Regex,
+    pub old_zh_filter: Regex,
 
     pub modern_data: Regex,
 }
@@ -41,11 +42,9 @@ impl Regexes {
         Self {
             row_end: Self::re(r#"</tr>"#),
             isolate_chinese_section: Self::re(r#"<h2 id=".*">(.*)</h2>"#),
-            pronunciation_sections: Self::re(r#"<h[34] id="Pronunciation_.*">(.*)</h[34]>"#),
+            pronunciation_sections: Self::re(r#"<h[34] id="Pronunciation.*">(.*)</h[34]>"#),
             mc_section_start: Self::re(r#"title="w:Middle Chinese" class="extiw">Middle Chinese"#),
-            mc_section_end: Self::re(
-                r#"<div class="vsSwitcher" data-toggle-category="pronunciations">"#,
-            ),
+            mc_section_end: Self::re(r#"</tbody></table></div></div>"#),
             mc_simple_row: Self::re(r#"<td.*>(.*)</td>"#),
             mc_reading_start: Self::re(r#"<th.*><small>Reading #</small></th>\n"#),
             mc_init_start: Self::re(r#"<th.*><small>Initial</small>"#),
@@ -77,6 +76,7 @@ impl Regexes {
                 r#"title="w:Zhengzhang Shangfang" class="extiw">Zhengzhang</a> system \(2003\)"#,
             ),
             old_zh_section_end: Self::re(r#"</tbody></table></div></div></div></div><link"#),
+            old_zh_filter: Self::re(r#"(\*.*)<.*>.*</.*>"#),
             modern_data: Self::re(r#"<div class="standard-box zhpron" .* data-mw='(.*)'"#),
         }
     }

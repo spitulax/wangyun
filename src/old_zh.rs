@@ -35,7 +35,14 @@ pub fn fetch(section: &'_ str) -> Vec<Data<'_>> {
         &regexes().old_old_chinese,
     );
     for (data, old_chinese) in datas.iter_mut().zip(old_chineses.into_iter()) {
-        data.old_chinese = old_chinese;
+        let re = &regexes().old_zh_filter;
+        if let Some(caps) = re.captures(old_chinese) {
+            if let Some(oc) = caps.get(1) {
+                data.old_chinese = oc.as_str();
+            }
+        } else {
+            data.old_chinese = old_chinese;
+        }
     }
 
     datas
