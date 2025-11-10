@@ -5,6 +5,7 @@ pub struct Regexes {
     pub row_end: Regex,
     pub isolate_chinese_section: Regex,
     pub pronunciation_sections: Regex,
+    pub traditional_char: Regex,
 
     pub mc_section_start: Regex,
     pub mc_section_end: Regex,
@@ -43,6 +44,9 @@ impl Regexes {
             row_end: Self::re(r#"</tr>"#),
             isolate_chinese_section: Self::re(r#"<h2 id=".*">(.*)</h2>"#),
             pronunciation_sections: Self::re(r#"<h[34] id="Pronunciation.*">(.*)</h[34]>"#),
+            traditional_char: Self::re(
+                r#" – see <span class="Hant" lang="zh"><a rel="mw:WikiLink" href="\.\/.#Chinese" title="(.)">"#,
+            ),
             mc_section_start: Self::re(r#"title="w:Middle Chinese" class="extiw">Middle Chinese"#),
             mc_section_end: Self::re(r#"</tbody></table></div></div>"#),
             mc_simple_row: Self::re(r#"<td.*>(.*)</td>"#),

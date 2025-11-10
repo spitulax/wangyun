@@ -3,7 +3,7 @@ use std::collections::HashSet;
 use crate::{
     middle, modern, old_bs, old_zh,
     request::request,
-    utils::{isolate_chinese_section, pronunciation_sections},
+    utils::{get_trad, isolate_chinese_section, pronunciation_sections},
     Args, Variants,
 };
 
@@ -20,12 +20,16 @@ macro_rules! print_modern {
 pub fn display(args: &Args) -> reqwest::Result<()> {
     let mut pages = vec![];
     for c in args.chars.chars() {
-        pages.push(request(c)?);
+        let page = request(c)?;
+        if let Some(trad) = get_trad(&page) {
+            pages.push((trad, request(trad)?));
+        } else {
+            pages.push((c, page));
+        }
     }
 
-    for (i, c) in args.chars.chars().enumerate() {
-        let page = &pages[i];
-        let section = isolate_chinese_section(page);
+    for (i, (c, page)) in pages.into_iter().enumerate() {
+        let section = isolate_chinese_section(&page);
 
         if i > 0 {
             println!();
@@ -294,12 +298,21 @@ pub fn display(args: &Args) -> reqwest::Result<()> {
 pub fn baxter(args: &Args) -> reqwest::Result<()> {
     let mut pages = vec![];
     for c in args.chars.chars() {
-        pages.push(request(c)?);
+        let page = request(c)?;
+        if let Some(trad) = get_trad(&page) {
+            pages.push((trad, request(trad)?));
+        } else {
+            pages.push((c, page));
+        }
     }
 
-    for (i, _) in args.chars.chars().enumerate() {
-        let page = &pages[i];
-        let section = isolate_chinese_section(page);
+    for (c, _) in pages.iter() {
+        print!("{}", c);
+    }
+    println!();
+
+    for (i, (_, page)) in pages.into_iter().enumerate() {
+        let section = isolate_chinese_section(&page);
 
         if i > 0 {
             print!(" ");

@@ -120,3 +120,15 @@ pub fn pronunciation_sections(section: &str) -> Vec<&str> {
 
     pron_sections
 }
+
+pub fn get_trad(section: &str) -> Option<char> {
+    let re = &regexes().traditional_char;
+    // NOTE: Only captures one section.
+    if let Some(caps) = re.captures(section) {
+        if let Some(ch) = caps.get(1) {
+            return ch.as_str().chars().nth(0);
+        }
+    }
+
+    return None;
+}
