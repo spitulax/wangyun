@@ -35,6 +35,10 @@ struct Args {
     /// Only print Baxter's Middle Chinese transcription
     #[arg(short, long)]
     baxter: bool,
+
+    /// Only print the result
+    #[arg(short, long)]
+    quiet: bool,
 }
 
 fn main() -> reqwest::Result<()> {

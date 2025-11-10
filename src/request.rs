@@ -20,7 +20,7 @@ const REQUEST_PER_SECOND: u64 = 10;
 const REQUEST_GAP: Duration = Duration::from_millis(1000 / REQUEST_PER_SECOND);
 static LAST_REQUEST_TIME: OnceLock<SystemTime> = OnceLock::new();
 
-pub fn request(c: char) -> reqwest::Result<String> {
+pub fn request(c: char, quiet: bool) -> reqwest::Result<String> {
     if let Some(t) = LAST_REQUEST_TIME.get() {
         let dur = SystemTime::now()
             .duration_since(*t)
@@ -31,7 +31,9 @@ pub fn request(c: char) -> reqwest::Result<String> {
     }
 
     let client = reqwest::blocking::Client::new();
-    eprintln!("Requesting {}...", c);
+    if !quiet {
+        eprintln!("Requesting {}...", c);
+    }
     let response = client
         .get(format!(
             "https://en.wiktionary.org/api/rest_v1/page/html/{}",

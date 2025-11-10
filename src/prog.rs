@@ -20,9 +20,9 @@ macro_rules! print_modern {
 pub fn display(args: &Args) -> reqwest::Result<()> {
     let mut pages = vec![];
     for c in args.chars.chars() {
-        let page = request(c)?;
+        let page = request(c, args.quiet)?;
         if let Some(trad) = get_trad(&page) {
-            pages.push((trad, request(trad)?));
+            pages.push((trad, request(trad, args.quiet)?));
         } else {
             pages.push((c, page));
         }
@@ -298,9 +298,9 @@ pub fn display(args: &Args) -> reqwest::Result<()> {
 pub fn baxter(args: &Args) -> reqwest::Result<()> {
     let mut pages = vec![];
     for c in args.chars.chars() {
-        let page = request(c)?;
+        let page = request(c, args.quiet)?;
         if let Some(trad) = get_trad(&page) {
-            pages.push((trad, request(trad)?));
+            pages.push((trad, request(trad, args.quiet)?));
         } else {
             pages.push((c, page));
         }
