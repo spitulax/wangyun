@@ -30,6 +30,7 @@ rec {
     strictDeps = true;
     nativeBuildInputs = with pkgs; [
       openssl.dev
+      pkg-config
     ];
     buildInputs = [ ];
   } // env;
